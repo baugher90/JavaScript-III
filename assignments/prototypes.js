@@ -52,7 +52,20 @@ CharacterStats.prototype.takeDamage = function() {
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
- 
+
+function Humanoid(att) {
+  CharacterStats.call(this, att);
+  this.team = att.team;
+  this.weapons = att.weapons;
+  this.language = att.language;
+}
+
+Humanoid.prototype = Object.create(CharacterStats.prototype);
+
+Humanoid.prototype.greet = function() {
+  return `${this.name} offers a greeting in ${this.language}.`;
+};
+
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
@@ -127,5 +140,8 @@ CharacterStats.prototype.takeDamage = function() {
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
+
+
+  
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
 
