@@ -141,7 +141,18 @@ Humanoid.prototype.greet = function() {
 // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.
 // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
 
+function Villain(att) {
+  Humanoid.call(this, att);
+  this.team = att.team;
+  this.cheat = att.cheat;
+  this.harrass = att.harrass;
+}
 
+Villain.prototype = Object.create(Humanoid.prototype);
+
+Villain.prototype.taunt = function() {
+  return `${this.name} ${this.harrass}`;
+};
   
 // * Create two new objects, one a villain and one a hero and fight it out with methods!
 

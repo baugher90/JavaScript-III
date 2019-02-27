@@ -71,14 +71,18 @@
 // code example for Explicit Binding
 
   
-    const obj2 = {
-        key4: value
-    }
+const obj1 = {
+  key: "value"
+}
 
-    function method() {
-        `this method uses ${this.key4}`
-    }
+const array = ["0","1","2"];
 
-    console.log(method.apply(obj2))
+
+function introduce(params) {
+  debugger;
+  return `this is my ${this.key} and these are from an array: ${params}`;
+}
+
+console.log(introduce.call(obj1, array));
 
     
