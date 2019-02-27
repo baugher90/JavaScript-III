@@ -42,18 +42,23 @@
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
 function GameObject(att) {
-
+  this.createdAt = att.createdAt;
+  this.dimensions = att.dimensions;
 }
+
+GameObject.prototype.destroy = function() {
+  return `${this.name} has been destroyed.`;
+};
 
 function CharacterStats(att) {
 
 }
 
 function Humanoid(att) {
-  
+  this.name = att.name
 }
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -114,7 +119,7 @@ function Humanoid(att) {
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
+
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
