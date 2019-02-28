@@ -77,9 +77,7 @@ const obj1 = {
 
 const array = ["0","1","2"];
 
-
 function introduce(params) {
-  debugger;
   return `this is my ${this.key} and these are from an array: ${params}`;
 }
 

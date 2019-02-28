@@ -57,13 +57,14 @@ function Humanoid(att) {
   CharacterStats.call(this, att);
   this.team = att.team;
   this.weapons = att.weapons;
-  this.language = att.language;
+  this.languages = att.languages;
 }
 
 Humanoid.prototype = Object.create(CharacterStats.prototype);
 
 Humanoid.prototype.greet = function() {
-  return `${this.name} offers a greeting in ${this.language}.`;
+  return `${this.name} offers a greeting in ${
+    this.languages[Math.floor(Math.random() * this.languages.length)]}.`;
 };
 
 /*
@@ -88,7 +89,7 @@ Humanoid.prototype.greet = function() {
     weapons: [
       'Staff of Shamalama',
     ],
-    language: 'Common Tongue',
+    languages: ['Common Tongue','Black Speech',],
   });
 
   const swordsman = new Humanoid({
@@ -105,7 +106,7 @@ Humanoid.prototype.greet = function() {
       'Giant Sword',
       'Shield',
     ],
-    language: 'Common Tongue',
+    languages: ['Common Tongue'],
   });
 
   const archer = new Humanoid({
@@ -122,7 +123,7 @@ Humanoid.prototype.greet = function() {
       'Bow',
       'Dagger',
     ],
-    language: 'Elvish',
+    languages: ['Elvish'],
   });
 
   console.log(mage.createdAt); // Today's date
@@ -131,7 +132,7 @@ Humanoid.prototype.greet = function() {
   console.log(mage.name); // Bruce
   console.log(swordsman.team); // The Round Table
   console.log(mage.weapons); // Staff of Shamalama
-  console.log(archer.language); // Elvish
+  console.log(archer.languages); // Elvish
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
@@ -140,19 +141,148 @@ Humanoid.prototype.greet = function() {
 // Stretch task: 
 // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.
 // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
-
-function Villain(att) {
+function Super(att) {
   Humanoid.call(this, att);
-  this.team = att.team;
-  this.cheat = att.cheat;
-  this.harrass = att.harrass;
 }
 
-Villain.prototype = Object.create(Humanoid.prototype);
+Super.prototype = Object.create(Humanoid.prototype);
+
+Super.prototype.normalAttack = function(target) {
+  let damage = Math.floor(Math.random() * (this.healthPoints / 3));
+
+  target.healthPoints -= damage;
+  console.log(
+    `${this.name} attacks ${target.name} with ${this.weapons[Math.floor(Math.random() * this.weapons.length)]
+    } inflicting ${damage} damage to ${target.name}'s health!`
+  );
+  if (target.healthPoints <= 0) {
+    console.log(`${target.name} recieved a critical hit! ${target.destroy()}`);
+  } else {
+    console.log(`${target.name} continues to fight!`);
+  }
+};
+
+//-------------------------------------------
+function Villain(att) {
+  Super.call(this, att);
+  this.harrass = att.harrass;
+  this.darkMagic = att.darkMagic;
+}
+
+Villain.prototype = Object.create(Super.prototype);
 
 Villain.prototype.taunt = function() {
-  return `${this.name} ${this.harrass}`;
+  return `${this.name}: ${this.harrass[Math.floor(Math.random() * this.harrass.length)]}`;
+}; 
+
+Villain.prototype.special = function(target) {
+  let damage = Math.floor(Math.random() * (this.healthPoints / 3));
+
+  target.healthPoints -= damage;
+  console.log(
+    `${this.name} hits ${target.name} using ${this.darkMagic[Math.floor(Math.random() * this.darkMagic.length)]} inflicting ${damage} damage to ${target.name}'s health!`
+  );
+  if (target.healthPoints <= 0) {
+    console.log(`${target.name} recieved a critical hit!${target.destroy()}`);
+  } else {
+    console.log(`${target.name} continues to fight!${target.special()}`);
+  }
 };
-  
+
+//-------------------------------------------
+
+function Hero(att) {
+  Super.call(this, att);
+  this.perseverance = att.perseverance;
+}
+
+Hero.prototype = Object.create(Super.prototype);
+
+Hero.prototype.special = function() {
+  let damage = Math.floor(Math.random() * (this.healthPoints / 3));
+
+  this.healthPoints += damage;
+  if (this.healthPoints >= 20) {
+    console.log(`${this.name}: I'm feeling better than ever!`);
+  } else {
+    console.log(`${this.name}: ${this.perseverance[Math.floor(Math.random() * this.perseverance.length)]}`);
+  }
+};
 // * Create two new objects, one a villain and one a hero and fight it out with methods!
 
+
+//---------------------------------------------
+const greatOrc = new Villain({
+  createdAt: new Date(),
+  dimensions: {
+    length: 1,
+    width: 2,
+    height: 4,
+  },
+  healthPoints: 25,
+  name: 'Mortas Natas',
+  team: 'Mortagar',
+  weapons: ['Bone Sword','Deamon Dagger','Soul Cleaver',],
+  languages: ['Black Speech','Common Tongue'],
+  harrass: ['Die you fool!','Foolish human this will be the end of you!','Fooliukh shara avhiuk liwo be avhe mubarum ro lat!'],
+  darkMagic: ['Blood magic','Soul Sacrifice','Torture']
+});
+//-----------------------------------------------
+const hero = new Hero({
+  createdAt: new Date(),
+  dimensions: {
+    length: 1,
+    width: 2,
+    height: 4,
+  },
+  healthPoints: 20,
+  name: 'Sir Garnet',
+  team: 'The Round Table',
+  weapons: ['Short Sword','Shield','Long Bow'],
+  languages: ['Common Tongue','Elvish'],
+  perseverance: ['Is that the best you can do!','Is that all!',"You'll have to do better than that"]
+});
+//----------------------------------------------
+
+//---Special thanks to Chirs for showing me this awesome function
+function battle(hero,villain) {
+  let winner = "";
+  //If no winner then battle
+  while (!winner) {
+    let attacker = "";
+    let defender = "";
+    //--Determining who the attacker is
+    let attDef = Math.floor(Math.random() * 2);
+    if (attDef === 0) {
+      attacker = hero;
+      defender = villain;
+    } else {
+      attacker = villain;
+      defender = hero;
+    }
+    //--Determining which attack to use
+    let normSpec = Math.floor(Math.random() * 2);
+    if (normSpec === 0) {
+      attacker.normalAttack(defender);
+    } else {
+      attacker.special(defender);
+    }
+    //--checking health to see if we have a winner
+    if (defender.healthPoints <= 0) {
+      winner = attacker;
+    }
+  }
+  //--If winner is hero console log hero victory 
+  if (winner === hero) {
+    console.log(
+      `${hero.name} has defeated the Great Orc ${villain.name}!`
+    );
+  //--If winner is villain console log villain victory  
+  } else {
+    console.log(
+      `${villain.name} defeated ${hero.name}! There are dark days ahead...`
+    );
+  }
+}
+
+battle(hero,greatOrc)
